@@ -1,0 +1,22 @@
+{
+    "name": "sjaakp/yii2-icon",
+    "description": "FontAwesome raw SVG icons in Yii2",
+    "keywords": ["yii", "yii2", "FontAwesome", "icon", "SVG"],
+    "type": "yii2-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sjaak Priester",
+            "email": "sjaak@sjaakpriester.nl",
+            "homepage": "https://sjaakpriester.nl"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "sjaakp\\icon\\": ""
+        }
+    }
+}
