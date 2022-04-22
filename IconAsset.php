@@ -16,7 +16,7 @@ use yii\web\AssetBundle;
 
 class IconAsset extends AssetBundle
 {
-    public $sourcePath = '@fontawesome/css';
+    public $baseUrl = '//use.fontawesome.com/releases/v6.1.1/css';
 
     public $css = [
         'svg-with-js.css'

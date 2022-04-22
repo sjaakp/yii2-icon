@@ -1,25 +1,27 @@
 yii2-icon
 =========
  
-###FontAwesome raw SVG symbols in Yii2
+### Raw SVG symbols in Yii2 ###
 
 [![Latest Stable Version](https://poser.pugx.org/sjaakp/yii2-icon/v/stable)](https://packagist.org/packages/sjaakp/yii2-collapse)
 [![Total Downloads](https://poser.pugx.org/sjaakp/yii2-icon/downloads)](https://packagist.org/packages/sjaakp/yii2-collapse)
 [![License](https://poser.pugx.org/sjaakp/yii2-icon/license)](https://packagist.org/packages/sjaakp/yii2-collapse)
 
-Probably the best way to embed [FontAwesome](https://fontawesome.com/) icons on your 
+Probably the best way to embed icons like those from [FontAwesome](https://fontawesome.com/)
+on your 
 website is to use [bare SVGs](https://fontawesome.com/docs/web/add-icons/svg-bare)
 as [SVG symbols](https://fontawesome.com/docs/web/add-icons/svg-symbols).
-The SVG-code of the icons is embedded in the page, so no extra font file has to be downloaded,
+The SVG-code of the icons is embedded in the page. Therefore no extra font file has to be downloaded,
 no JavaScript needs to run at page set up,
-and the browser will render the icons extremely fast.
+and the browser will render the icons as fast as possible.
 
 At the downside, this requires a bit more coding. Until now, that is; because now there is **yii2-icon**.
 This provides a helper class for [Yii 2.0](https://www.yiiframework.com/) that
-takes the burden out of FontAwesome bare SVG Symbols.
+takes the burden out of icons based on bare SVG Symbols.
 
 A demonstration of **yii2-icon** is
 [here](http://www.sjaakpriester.nl/software/icon).
+**yii2-icon**'s GitHub-page is [here](https://github.com/sjaakp/yii2-icon).
 
 ## Installation ##
 
@@ -34,50 +36,47 @@ or run:
 
 You can manually install **yii2-icon** by [downloading the source in ZIP-format](https://github.com/sjaakp/yii2-icon/archive/master.zip).
 
-### FontAwesome ###
-
-For **yii2-icon** to work, FontAwesome has to be installed on your site.
-There are several ways to do this.
-
-If you are using **FontAwesome Free**, probably the easiest way is to add:
-
-`"fortawesome/font-awesome": "*"`
-
-to the require section of your `composer.json` file, or to run:
-
-`composer require fortawesome/font-awesome`
-
-Users of **FontAwesome Pro** may be better of by using `npm`. More information
-[here](https://fontawesome.com/docs/web/setup/packages#_1-configure-access).
-
 ## Setup ##
 
-An [Yii2 alias](https://www.yiiframework.com/doc/guide/2.0/en/concept-aliases)
-has to be defined for `'@fontawesome'`. This should point to the
-location of the FontAwesome files.
+For **yii2-icon** to work, some icon collection has to be installed on your site as well.
+In many cases this will be installed via [`npm`](https://www.npmjs.com/), other
+collections (notably [FontAwesome Free](https://fontawesome.com/)) via
+[Composer](https://getcomposer.org/). Refer to the icon provider's web site for details.
 
-For **FontAwesome Free**, installed via `composer`, this will probably be:
+In any case, an [Yii2 alias](https://www.yiiframework.com/doc/guide/2.0/en/concept-aliases)
+has to be defined for `'@icons'`. This should describe the
+location of the icon files.
 
-`'@vendor/fortawesome/font-awesome'`
+As an example, for **FontAwesome Free**, installed via `composer`, this will be:
 
-For **FontAwesome Pro**, installed via `npm`, it will be:
+`'@vendor/fortawesome/font-awesome/svgs/{family}/{name}.svg'`
 
-`'@app/node_modules/@fortawesome/fontawesome-pro'`
+Here, **yii2-icon** will replace `{family}` with the icon family (like `'regular'`,
+`'solid'`, or `'thin'`). 
+
+`'{name}'` will be replaced by the icon name (like
+`'bicycle'`, `'chess-queen'`, or `'arrow-down'`). Icon names can be found at the 
+icon provider's site.
+
+As another example, for **FontAwesome Pro**, installed via `npm`, `'@icons'` 
+should be:
+
+`'@app/node_modules/@fortawesome/fontawesome-pro/svgs/{family}/{name}.svg'`
 
 The preferred way to set the alias is to add it to `'aliases'`-section
-of the main site configuration (often `web.php` in the `config`-directory).
+of the main site configuration (often `web.php`, or `main.php` in the `config`-directory).
 The `'aliases'`-section should look something like this:
 
     'aliases' => [
-        '@bower'        => '@vendor/bower-asset',
-        '@npm'          => '@vendor/npm-asset',
-        '@fontawesome'  => '@vendor/fortawesome/font-awesome',
+        '@bower'  => '@vendor/bower-asset',
+        '@npm'    => '@vendor/npm-asset',
+        '@icons'  => '@vendor/fortawesome/font-awesome/svgs/{family}/{name}.svg',
         // ... probably more aliases ...
     ],
 
-If alias `'@fontawesome'` is not set, **yii2-icon** will throw an error.
+If alias `'@icons'` is not set, **yii2-icon** will throw an error.
 
-Next, the main layout view (probably `'views/layouts/main.php'`) should
+Next, the main layout view of the site (probably `'views/layouts/main.php'`) should
 be modified. At the top of the `body`-section, **yii2-icon**'s
 class `Icon` has to render the
 SVG-symbols. The beginning of the main layout view should look something like this:
@@ -102,8 +101,8 @@ SVG-symbols. The beginning of the main layout view should look something like th
 
 ## Using yii2-icon ##
 
-If everything is set up correctly, you can render FontAwesome icons
-anywhere in any view. To render an icon of the `regular` family, just
+If everything is set up correctly, you can render icons
+anywhere in any view. For example, to render an icon of the `regular` family, just
 use something like this:
 
     <?= Icon::regular('bicycle') ?>
@@ -111,16 +110,22 @@ use something like this:
 Likewise for the other families:
 
     <?= Icon::solid('heart') ?>
-    <?= Icon::light('bell') ?> (pro only)
+    <?= Icon::light('bell') ?>
 
-The names of the icons can be found at [excellent FontAwesome search page ](https://fontawesome.com/icons).
+If an icon collection has no families, like the [Bootstrap Icons](https://icons.getbootstrap.com/),
+an icon can be rendered with:
+
+    <?= Icon::icon('camera') ?>
+
+## Styling ##
 
 Icons can be extended with HTML options, like so:
 
     <?= Icon::regular('bicycle', [ 'class' => 'blue' ]) ?>
 
-Most of the [FontAwesome styling classes](https://fontawesome.com/docs/web/style/styling),
-such as `fa-lg`, `fa-rotate-90`, will work out of the box, f.i.:
+**yii2-icon** always includes the [FontAwesome styling classes](https://fontawesome.com/docs/web/style/styling),
+even for other font collections. This means that classes
+such as `fa-lg`, `fa-rotate-90`, will work out of the box. For example:
 
     <?= Icon::solid('rotate', [ 'class' => 'fa-spin' ]) ?>
 
@@ -129,23 +134,21 @@ such as `fa-lg`, `fa-rotate-90`, will work out of the box, f.i.:
 All functionality of **yii2-icon** is bundled in one abstract class, `sjaakp\icon\Icon`.
 It has only abstract functions, all returning HTML:
 
- - **regular($name, $options = [])** - render icon with name `$name` from the
-`regular` family. Shortcut for `renderIcon('regular', $name, $options)`.   
- - **solid($name, $options = [])** - render icon with name `$name` from the
-`solid` family. Shortcut for `renderIcon('solid', $name, $options)`.   
- - **light($name, $options = [])** - render icon with name `$name` from the
-`light` family. Shortcut for `renderIcon('light', $name, $options)`.   
- - **thin($name, $options = [])** - render icon with name `$name` from the
-`thin` family. Shortcut for `renderIcon('thin', $name, $options)`.   
- - **duotone($name, $options = [])** - render icon with name `$name` from the
-`duotone` family. Shortcut for `renderIcon('duotone', $name, $options)`.   
- - **brands($name, $options = [])** - render icon with name `$name` from the
-`brands` family. Shortcut for `renderIcon('brands', $name, $options)`.   
  - **renderIcon($fam, $name, $options = [])** - render icon witn name `Sname`
 from family `$fam`.
  - **symbols($view)** - render the symbol table in 
 [View](https://www.yiiframework.com/doc/guide/2.0/en/structure-views) `$view`,
 preferably a [Layout](https://www.yiiframework.com/doc/guide/2.0/en/structure-views#layouts).
+
+**All other function calls** will be translated in a call to **renderIcon**,
+where the function name will be the value of `$fam`. Therefore, a function
+call like:
+
+    Icon::regular('bicycle', [ <options> ]);
+
+will be interpreted as:
+
+    Icon::renderIcon('regular', 'bicycle', [ <options> ]);
 
 ## How icons are rendered ##
 
@@ -155,7 +158,7 @@ in it. It will be rendered like:
     <body>
         <svg xmlns="http://www.w3.org/2000/svg"> <!-- invisible symbol table -->
             <symbol ...><path d="..."/></symbol>
-            <symbol id="solid-mug-hot" viewBox="0 0 512 512"><path d="M400 192H32C14.25 192 ..."/></symbol>
+            <symbol id="i-solid-mug-hot" viewBox="0 0 512 512"><path d="M400 192H32C14.25 192 ..."/></symbol>
             <symbol ...><path d="..."/></symbol> <!-- more symbols -->
         </svg>
 
@@ -164,7 +167,7 @@ in it. It will be rendered like:
         ...
     
         ... <svg class="fa-rotate-90 svg-inline--fa">
-                <use href="#solid-mug-hot"></use>
+                <use href="#i-solid-mug-hot"></use>
             </svg> ...
 
         ...
@@ -200,3 +203,16 @@ like so:
 
         // ...
 
+## Some icon resources ##
+
+| Name                                         | @icons                                                                                            |
+|----------------------------------------------|---------------------------------------------------------------------------------------------------|
+| [FontAwesome Free](https://fontawesome.com/) | `'@vendor/fortawesome/font-awesome/svgs/{family}/{name}.svg'`                                     |
+| [FontAwesome Pro](https://fontawesome.com/)  | `'@node/@fortawesome/fontawesome-pro/svgs{family}/{name}.svg'`                                    |
+|[Google Material Icons](https://fonts.google.com/icons)| `'@node/@material-design-icons/svg{family}/{name}.svg'`                                           |
+|[Feather](https://feathericons.com/)| `'@node/feather-icons/dist/icons/{name}.svg'`                                                     |
+|[Bootstrap Icons](https://icons.getbootstrap.com/)| `'@vendor/twbs/bootstrap-icons/icons/{name}.svg'`<br/> `'@node/bootstrap-icons/icons/{name}.svg'` |
+|[Teeny Icons](https://teenyicons.com/)| `'@node/teenyicons/{family}/{name}.svg'`                                                          |
+|[Microsoft Fluent Icons](https://fluenticons.co/)| `'@node/@fluentui/svg-icons/icons/{name}_24_{family}.svg'`                                        |  
+
+(Notice: `'@node'` is an alias for `'@app/node_modules'`.)
