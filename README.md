@@ -51,11 +51,14 @@ As an example, for **FontAwesome Free**, installed via `composer`, this will be:
 
 `'@vendor/fortawesome/font-awesome/svgs/{family}/{name}.svg'`
 
-Here, **yii2-icon** will replace `{family}` with the icon family (like `'regular'`,
+ - `{family}` will be replaced by the icon family (like `'regular'`,
 `'solid'`, or `'thin'`). 
+ - `{name}` will be replaced by the icon name (like
+`'bicycle'`, `'chess-queen'`, or `'arrow-down'`). 
+ - `{phosphor}` will be replaced by a combination of icon family and icon name
+as expected by [Phosphor Icons](https://phosphoricons.com/).
 
-`'{name}'` will be replaced by the icon name (like
-`'bicycle'`, `'chess-queen'`, or `'arrow-down'`). Icon names can be found at the 
+Icon families and names can be found at the 
 icon provider's site.
 
 As another example, for **FontAwesome Pro**, installed via `npm`, `'@icons'` 
@@ -205,14 +208,15 @@ like so:
 
 ## Some icon resources ##
 
-| Name                                         | @icons                                                                                            |
-|----------------------------------------------|---------------------------------------------------------------------------------------------------|
-| [FontAwesome Free](https://fontawesome.com/) | `'@vendor/fortawesome/font-awesome/svgs/{family}/{name}.svg'`                                     |
-| [FontAwesome Pro](https://fontawesome.com/)  | `'@node/@fortawesome/fontawesome-pro/svgs{family}/{name}.svg'`                                    |
-|[Google Material Icons](https://fonts.google.com/icons)| `'@node/@material-design-icons/svg{family}/{name}.svg'`                                           |
-|[Feather](https://feathericons.com/)| `'@node/feather-icons/dist/icons/{name}.svg'`                                                     |
-|[Bootstrap Icons](https://icons.getbootstrap.com/)| `'@vendor/twbs/bootstrap-icons/icons/{name}.svg'`<br/> `'@node/bootstrap-icons/icons/{name}.svg'` |
-|[Teeny Icons](https://teenyicons.com/)| `'@node/teenyicons/{family}/{name}.svg'`                                                          |
-|[Microsoft Fluent Icons](https://fluenticons.co/)| `'@node/@fluentui/svg-icons/icons/{name}_24_{family}.svg'`                                        |  
+| Name                                                    | @icons                                                                                            |
+|---------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| [FontAwesome Free](https://fontawesome.com/)            | `'@vendor/fortawesome/font-awesome/svgs/{family}/{name}.svg'`                                     |
+| [FontAwesome Pro](https://fontawesome.com/)             | `'@node/@fortawesome/fontawesome-pro/svgs{family}/{name}.svg'`                                    |
+| [Google Material Icons](https://fonts.google.com/icons) | `'@node/@material-design-icons/svg{family}/{name}.svg'`                                           |
+| [Feather](https://feathericons.com/)                    | `'@node/feather-icons/dist/icons/{name}.svg'`                                                     |
+| [Bootstrap Icons](https://icons.getbootstrap.com/)      | `'@vendor/twbs/bootstrap-icons/icons/{name}.svg'`<br/> `'@node/bootstrap-icons/icons/{name}.svg'` |
+| [Phosphor Icons](https://phosphoricons.com/)            | `'@app/phosphor-icons/{phosphor}.svg'`                                                            |
+| [Teeny Icons](https://teenyicons.com/)                  | `'@node/teenyicons/{family}/{name}.svg'`                                                          |
+| [Microsoft Fluent Icons](https://fluenticons.co/)       | `'@node/@fluentui/svg-icons/icons/{name}_24_{family}.svg'`                                        |  
 
 (Notice: `'@node'` is an alias for `'@app/node_modules'`.)

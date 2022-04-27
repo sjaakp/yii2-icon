@@ -54,7 +54,17 @@ abstract class Icon
         if (! isset($id, self::$register[$id]))  {      // if not already registered
             try {
                 $icons = Yii::getAlias("@icons");
-                $svgFile = str_replace([ '{family}', '{name}' ], [ $fam, $name ], $icons);
+                $svgFile = preg_replace_callback('/{(\w+)}/', function($m) use ($fam, $name) {
+                    switch($m[1])   {
+                        case 'name' : return $name;
+                        case 'family' : return $fam;
+                        case 'phosphor' :
+                            $t = "$fam/$name";
+                            if ($fam != 'regular') $t .= "-$fam";
+                            return $t;
+                    }
+                    return $m[0];
+                }, $icons);
                 $r = file_get_contents($svgFile);
             }
             catch (\Exception $e) {
