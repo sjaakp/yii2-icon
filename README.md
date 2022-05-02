@@ -126,7 +126,7 @@ Icons can be extended with HTML options, like so:
 
     <?= Icon::regular('bicycle', [ 'class' => 'blue' ]) ?>
 
-**yii2-icon** always includes the [FontAwesome styling classes](https://fontawesome.com/docs/web/style/styling),
+By default, **yii2-icon** includes the [FontAwesome styling classes](https://fontawesome.com/docs/web/style/styling),
 even for other font collections. This means that classes
 such as `fa-lg`, `fa-rotate-90`, will work out of the box. For example:
 
@@ -139,9 +139,11 @@ It has only abstract functions, all returning HTML:
 
  - **renderIcon($fam, $name, $options = [])** - render icon witn name `Sname`
 from family `$fam`.
- - **symbols($view)** - render the symbol table in 
+ - **symbols($view, $options = [])** - render the symbol table in 
 [View](https://www.yiiframework.com/doc/guide/2.0/en/structure-views) `$view`,
 preferably a [Layout](https://www.yiiframework.com/doc/guide/2.0/en/structure-views#layouts).
+Currently, the only option recognized is `'faCss'`, which determines whether
+the FontAwesome styling CSS is registered or not. Default: `true`.
 
 **All other function calls** will be translated in a call to **renderIcon**,
 where the function name will be the value of `$fam`. Therefore, a function

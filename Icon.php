@@ -1,8 +1,8 @@
 <?php
 /**
  * MIT licence
- * Version 1.1
- * Sjaak Priester, Amsterdam 21-04-2021.
+ * Version 1.1.2
+ * Sjaak Priester, Amsterdam 02-05-2021.
  *
  * yii2-icon
  * FontAwesome raw SVG symbols in Yii2
@@ -21,7 +21,14 @@ abstract class Icon
 {
     public static $register = [];
 
-    public static $prefix = 'i-';
+    public static $template = 'i-{family}-{name}';
+
+    public static $iconClass = 'svg-inline--fa';
+
+    protected static function iconId($fam, $name)
+    {
+        return str_replace([ '{family}', '{name}' ], [ $fam, $name ], self::$template);
+    }
 
     /**
      * @param $fam      - icon family
@@ -33,9 +40,8 @@ abstract class Icon
     public static function renderIcon($fam, $name, $options = [])
     {
         self::registerIcon($fam, $name);
-        Html::addCssClass($options, 'svg-inline--fa');
-        $prf = self::$prefix;
-        $id = "{$prf}$fam-$name";
+        Html::addCssClass($options, self::$iconClass);
+        $id = self::iconId($fam, $name);
         $asp = self::$register[$id]['aspect'];
         if ($asp != 1) Html::addCssStyle($options, ['aspect-ratio' => $asp ]);
         return Html::tag('svg', "<use href=\"#$id\"></use>", $options);
@@ -49,8 +55,7 @@ abstract class Icon
      */
     public static function registerIcon($fam, $name)
     {
-        $prf = self::$prefix;
-        $id = "{$prf}$fam-$name";
+        $id = self::iconId($fam, $name);
         if (! isset($id, self::$register[$id]))  {      // if not already registered
             try {
                 $icons = Yii::getAlias("@icons");
@@ -83,21 +88,30 @@ abstract class Icon
 
     /**
      * @param $view     - yii\web\View
+     * @param array $options
+     * - 'faCss' boolean; whether FontAwesome CSS is registered
      * @return string   - HTML of symbol table
      */
-    public static function symbols($view)
+    public static function symbols($view, $options = [])
     {
         if (count(self::$register) == 0) return '';      // no icons
-        IconAsset::register($view);
 
-        $view->registerCss('.svg-inline--fa {aspect-ratio:1;fill: currentColor;}
+        $opts = array_merge([
+            'faCss' => true
+        ], $options);
+
+        if ($opts['faCss']) {
+            IconAsset::register($view);
+
+            $view->registerCss('.svg-inline--fa {aspect-ratio:1;fill: currentColor;}
 .fa-primary {fill:var(--fa-primary-color,currentColor);opacity:var(--fa-primary-opacity,1); }
 .fa-secondary {fill:var(--fa-secondary-color,currentColor);opacity:var(--fa-secondary-opacity, 0.4) !important;}
 .fa-swap-opacity {--fa-primary-opacity:0.4;--fa-secondary-opacity:1;}');
+        }
 
         $syms = [];
         if (preg_match('/<!--(.*)-->/', current(self::$register)['symbol'], $m))  {
-            $syms[0] = $m[0];
+            $syms[0] = $m[0];   // include comment (credentials) once
         }
 
         foreach (self::$register as $id => $data)   {
