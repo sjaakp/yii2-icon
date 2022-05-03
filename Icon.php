@@ -1,11 +1,11 @@
 <?php
 /**
  * MIT licence
- * Version 1.1.2
- * Sjaak Priester, Amsterdam 02-05-2021.
+ * Version 1.2.0
+ * Sjaak Priester, Amsterdam 03-05-2021.
  *
  * yii2-icon
- * FontAwesome raw SVG symbols in Yii2
+ * Raw SVG symbols in Yii2
  *
  * @link: https://sjaakpriester.nl/software/icon
  */
@@ -15,19 +15,16 @@ namespace sjaakp\icon;
 use Yii;
 use yii\helpers\Html;
 use yii\base\ErrorException;
-use yii\base\InvalidArgumentException;
 
 abstract class Icon
 {
-    public static $register = [];
+    protected static $register = [];
 
-    public static $template = 'i-{family}-{name}';
-
-    public static $iconClass = 'svg-inline--fa';
+    protected static $settings;
 
     protected static function iconId($fam, $name)
     {
-        return str_replace([ '{family}', '{name}' ], [ $fam, $name ], self::$template);
+        return str_replace([ '{family}', '{name}' ], [ $fam, $name ], self::$settings['template']);
     }
 
     /**
@@ -40,11 +37,29 @@ abstract class Icon
     public static function renderIcon($fam, $name, $options = [])
     {
         self::registerIcon($fam, $name);
-        Html::addCssClass($options, self::$iconClass);
+        Html::addCssClass($options, self::$settings['iconClass']);
         $id = self::iconId($fam, $name);
         $asp = self::$register[$id]['aspect'];
         if ($asp != 1) Html::addCssStyle($options, ['aspect-ratio' => $asp ]);
         return Html::tag('svg', "<use href=\"#$id\"></use>", $options);
+    }
+
+    /**
+     * @return void
+     * @throws ErrorException
+     * Set $settings from application parameter 'icons'
+     */
+    public static function reset()
+    {
+        $icons = Yii::$app->params['icons'] ?? false;
+        if (! $icons) throw new ErrorException("Parameter \"icons\" is not set.");
+        if (is_string($icons)) $icons = [ 'location' => $icons ];
+        self::$settings = array_merge([
+            'faCss' => true,                // defaults
+            'template' => 'i-{family}-{name}',
+            'iconClass' => 'svg-inline--fa'
+        ], $icons);
+        if (! isset(self::$settings['location'])) throw new ErrorException("Parameter \"location\" is not set.");
     }
 
     /**
@@ -55,10 +70,12 @@ abstract class Icon
      */
     public static function registerIcon($fam, $name)
     {
+        if (is_null(self::$settings))    {           // if self::$settings not set
+            self::reset();
+        }
         $id = self::iconId($fam, $name);
         if (! isset($id, self::$register[$id]))  {      // if not already registered
             try {
-                $icons = Yii::getAlias("@icons");
                 $svgFile = preg_replace_callback('/{(\w+)}/', function($m) use ($fam, $name) {
                     switch($m[1])   {
                         case 'name' : return $name;
@@ -69,11 +86,10 @@ abstract class Icon
                             return $t;
                     }
                     return $m[0];
-                }, $icons);
-                $r = file_get_contents($svgFile);
+                }, self::$settings['location']);
+                $r = file_get_contents(Yii::getAlias($svgFile));
             }
             catch (\Exception $e) {
-                if (is_a($e, InvalidArgumentException::class)) throw new ErrorException("Alias \"@icons\" is not set.");
                 throw new ErrorException("Icon family: \"$fam\", name: \"$name\" not found.");
             }
             $r1 = preg_replace('/(width|height)="(\d+)" /', '', $r);
@@ -88,19 +104,13 @@ abstract class Icon
 
     /**
      * @param $view     - yii\web\View
-     * @param array $options
-     * - 'faCss' boolean; whether FontAwesome CSS is registered
      * @return string   - HTML of symbol table
      */
-    public static function symbols($view, $options = [])
+    public static function symbols($view)
     {
         if (count(self::$register) == 0) return '';      // no icons
 
-        $opts = array_merge([
-            'faCss' => true
-        ], $options);
-
-        if ($opts['faCss']) {
+        if (self::$settings['faCss']) {
             IconAsset::register($view);
 
             $view->registerCss('.svg-inline--fa {aspect-ratio:1;fill: currentColor;}

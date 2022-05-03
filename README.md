@@ -43,9 +43,10 @@ In many cases this will be installed via [`npm`](https://www.npmjs.com/), other
 collections (notably [FontAwesome Free](https://fontawesome.com/)) via
 [Composer](https://getcomposer.org/). Refer to the icon provider's web site for details.
 
-In any case, an [Yii2 alias](https://www.yiiframework.com/doc/guide/2.0/en/concept-aliases)
-has to be defined for `'@icons'`. This should describe the
-location of the icon files.
+In any case, an application parameter named `'icons'`
+has to be defined. This should describe the location of the icon files. The value
+may, and preferably should, be an 
+[Yii2 alias](https://www.yiiframework.com/doc/guide/2.0/en/concept-aliases).
 
 As an example, for **FontAwesome Free**, installed via `composer`, this will be:
 
@@ -66,18 +67,18 @@ should be:
 
 `'@app/node_modules/@fortawesome/fontawesome-pro/svgs/{family}/{name}.svg'`
 
-The preferred way to set the alias is to add it to `'aliases'`-section
+The preferred way to set the application parameter is to add it to `'params'`-section
 of the main site configuration (often `web.php`, or `main.php` in the `config`-directory).
-The `'aliases'`-section should look something like this:
+The `'params'`-section may look something like this:
 
-    'aliases' => [
-        '@bower'  => '@vendor/bower-asset',
-        '@npm'    => '@vendor/npm-asset',
-        '@icons'  => '@vendor/fortawesome/font-awesome/svgs/{family}/{name}.svg',
-        // ... probably more aliases ...
+    'params' => [
+        'adminEmail' => 'info@example.com',
+        'supportEmail' => 'support@example.com',
+        'icons'  => '@vendor/fortawesome/font-awesome/svgs/{family}/{name}.svg',
+        // ... probably more parameters ...
     ],
 
-If alias `'@icons'` is not set, **yii2-icon** will throw an error.
+If application parameter `'icons'` is not set, **yii2-icon** will throw an error.
 
 Next, the main layout view of the site (probably `'views/layouts/main.php'`) should
 be modified. At the top of the `body`-section, **yii2-icon**'s
@@ -135,15 +136,16 @@ such as `fa-lg`, `fa-rotate-90`, will work out of the box. For example:
 ## Class Icon ##
 
 All functionality of **yii2-icon** is bundled in one abstract class, `sjaakp\icon\Icon`.
-It has only abstract functions, all returning HTML:
+It has only abstract functions:
 
  - **renderIcon($fam, $name, $options = [])** - render icon witn name `Sname`
-from family `$fam`.
- - **symbols($view, $options = [])** - render the symbol table in 
+from family `$fam`. Returns HTML.
+ - **symbols($view)** - render the symbol table in 
 [View](https://www.yiiframework.com/doc/guide/2.0/en/structure-views) `$view`,
 preferably a [Layout](https://www.yiiframework.com/doc/guide/2.0/en/structure-views#layouts).
-Currently, the only option recognized is `'faCss'`, which determines whether
-the FontAwesome styling CSS is registered or not. Default: `true`.
+Returns HTML.
+ - **reset()** - reset **yii2-icon**'s status from application parameter `'icons'`. May come in 
+handy in case of multiple icon collections.
 
 **All other function calls** will be translated in a call to **renderIcon**,
 where the function name will be the value of `$fam`. Therefore, a function
@@ -207,6 +209,18 @@ like so:
         Render house icon: <?= $iconHouse ?>.
 
         // ...
+
+## Advanced setup ##
+
+In stead of the description of the icon SVG files location, the value of the
+application parameter `'icons'` may also be an array with the following members:
+
+ - **location** - the location of the icon SVG files, like previous described. Must be provided.
+ - **faCss** - Optional. Whether Icon registers Font Awesome styling CSS. Default: `true`.
+ - **template** - Optional. The template used for forming the icon's HTML id from
+the family and name. Default and example: `'i-{family}-{name}'`.
+ - **iconClass** - Optional. The CSS class(es) assigned to icons. 
+Default: `'svg-inline--fa'`.
 
 ## Some icon resources ##
 
