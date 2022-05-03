@@ -62,8 +62,8 @@ as expected by [Phosphor Icons](https://phosphoricons.com/).
 Icon families and names can be found at the 
 icon provider's site.
 
-As another example, for **FontAwesome Pro**, installed via `npm`, `'@icons'` 
-should be:
+As another example, for **FontAwesome Pro**, installed via `npm`, 
+application parameter `'icons'` should be:
 
 `'@app/node_modules/@fortawesome/fontawesome-pro/svgs/{family}/{name}.svg'`
 
@@ -138,7 +138,7 @@ such as `fa-lg`, `fa-rotate-90`, will work out of the box. For example:
 All functionality of **yii2-icon** is bundled in one abstract class, `sjaakp\icon\Icon`.
 It has only abstract functions:
 
- - **renderIcon($fam, $name, $options = [])** - render icon witn name `Sname`
+ - **renderIcon($fam, $name, $options = [])** - render icon witn name `$name`
 from family `$fam`. Returns HTML.
  - **symbols($view)** - render the symbol table in 
 [View](https://www.yiiframework.com/doc/guide/2.0/en/structure-views) `$view`,
