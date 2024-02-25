@@ -1,8 +1,8 @@
 <?php
 /**
  * MIT licence
- * Version 1.2.0
- * Sjaak Priester, Amsterdam 03-05-2021.
+ * Version 1.2.1
+ * Sjaak Priester, Amsterdam 03-05-2021 ... 25-2-2024.
  *
  * yii2-icon
  * Raw SVG symbols in Yii2
@@ -145,7 +145,8 @@ abstract class Icon
         if (count($arguments) == 1) $arguments[] = [];
         array_unshift($arguments, $fName);
 
-        return forward_static_call_array('self::renderIcon', $arguments);
+        return forward_static_call_array([self::class , 'renderIcon'], $arguments);
+//        return forward_static_call_array('self::renderIcon', $arguments); // deprecated per PHP 8.2 @link https://php.watch/versions/8.2/partially-supported-callable-deprecation
     }
 
     /**
